@@ -39,7 +39,6 @@ def data_exploration():
         is_object_dtype,
     )
     import streamlit as st
-    from streamlit_extras.dataframe_explorer import dataframe_explorer
     import plotly.express as px
     import warnings
     warnings.simplefilter(action='ignore', category=FutureWarning)
