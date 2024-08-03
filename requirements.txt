@@ -1,6 +1,6 @@
 numpy
-pandas
-pandas.api.types
+pandas==2.2.2
+pandas.api.types==2.2.2
 matplotlib
 warnings
 plotly
