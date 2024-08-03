@@ -1,5 +1,8 @@
 numpy
 pandas
+pandas.api.types
 matplotlib
 warnings
 plotly
+plotly.express
+plotly.figure_factory
