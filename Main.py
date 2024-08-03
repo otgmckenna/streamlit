@@ -167,7 +167,7 @@ def corps_comparison():
     
     # Creating the comparison plot using the chosen corps and the chosen numrical columns
     # Showing evolution of scores over the season
-    fig = px.line(df[df['Corps'].isin(corps)], x='Date', y=columns, color='Corps', title=f'Comparison of corps - {columns}')
+    fig = px.line(df[df['Corps'].isin(corps)], x='Date', y=columns, color='Corps', title=f'Comparison of corps - {columns}', width=1600, height=800)
     # Adding dot to the line plot that indicate a corp's performance
     fig.update_traces(mode='markers+lines')
     # Updating hover text to be cleaner
@@ -180,6 +180,7 @@ def score_dist():
     import pandas as pd
     import streamlit as st
     import plotly.express as px
+    import plotly.figure_factory as ff
     import warnings
     warnings.simplefilter(action='ignore', category=FutureWarning)
     from urllib.error import URLError
@@ -206,17 +207,26 @@ def score_dist():
     # Letting user choose only one numerical column to compare
     columns = st.selectbox('Select a score or caption to view the distribution', df.select_dtypes('number').columns)
     
-    # Creating the distribution plot using the chosen numrical columns
-    fig = px.histogram(df, x=columns, title=f'Distribution of scores - {columns}')
-    # Adding a vertical line to indicate the mean score
-    fig.add_vline(x=df[columns].mean(), line_dash='dash', line_color='red', annotation_text='Average', annotation_position='top left')
-    # Cleaning up the hover text
-    fig.update_traces(hovertemplate='<br>Count: %{y}<br>Score: %{x}')
+    # Adding a filter to show only a certain class, if desired
+    class_filter = st.selectbox('Filter by class', ['All', 'World', 'Open', 'All-Age'])
+    
+    if class_filter != 'All':
+        df = df[df['Class'] == class_filter]
+    elif class_filter == 'All':
+        df = df
+    
+    # Creating a histogram of the chosen score/caption using Plotly Figure Factory, showing each class in a different color
+    fig = ff.create_distplot([df[columns][df['Class'] == c].dropna() for c in df['Class'].unique()], df['Class'].unique(), colors=['#c8363d', '#1761af', '#6aa338'], bin_size=1)
+    # Adjusting the hover text
+    fig.update_traces(hovertemplate='Score: %{x}<br>Density: %{y}')
+    # Adding a vertical line to indicate the mean score and showing the mean value
+    fig.add_vline(x=df[columns].mean(), line_dash='dash', line_color='gray', annotation_text='Mean', annotation_position='top left')
     # Changing the x-axis label
     fig.update_xaxes(title_text='Score')
     # Changing the y-axis label
     fig.update_yaxes(title_text='Count')
     st.plotly_chart(fig)
+
 
 def overall_scores():
     import pandas as pd
@@ -249,7 +259,7 @@ def overall_scores():
     most_recent_scores = df.loc[df.groupby('Corps')['Date'].idxmax()]
     
     # Sorting the data by the Total column
-    most_recent_scores = most_recent_scores.sort_values('Total', ascending=False)
+    most_recent_scores = most_recent_scores.sort_values('Total', ascending=True)
     
     # Ading a filter to show only a certain class, if desired
     class_filter = st.selectbox('Filter by class', ['All', 'World', 'Open', 'All-Age'])
@@ -258,9 +268,11 @@ def overall_scores():
         most_recent_scores = most_recent_scores[most_recent_scores['Class'] == class_filter]
     
     # Creating a horizontal bar plot of the most recent scores
-    fig = px.bar(most_recent_scores, x='Total', y='Corps', orientation='h', title='Overall Rankings', width=800, height=1200)
+    fig = px.bar(most_recent_scores, x='Total', y='Corps', orientation='h', title='Overall Rankings', width=1600, height=1000)
+    # Adding score to the bars
+    fig.update_traces(text=most_recent_scores['Total'], textposition='inside')
     # Adding a vertical line to indicate the mean score
-    fig.add_vline(x=most_recent_scores['Total'].mean(), line_dash='dash', line_color='red', annotation_text='Average', annotation_position='top left')
+    fig.add_vline(x=most_recent_scores['Total'].mean(), line_dash='dash', line_color='white', annotation_text='Average', annotation_position='bottom left')
     # Coloring the bars based on class
     fig.update_traces(marker_color=most_recent_scores['Class'].map({'World': '#c8363d', 'Open': '#1761af', 'All-Age': '#6aa338'}))
     # Cleaning up the hover text
