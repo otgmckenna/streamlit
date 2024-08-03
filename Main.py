@@ -214,7 +214,7 @@ def score_dist():
     # Adjusting the hover text
     fig.update_traces(hovertemplate='Score: %{x}<br>Density: %{y}')
     # Adding a vertical line to indicate the mean score and showing the mean value
-    fig.add_vline(x=df[columns].mean(), line_dash='dash', line_color='gray', annotation_text='Mean', annotation_position='top left')
+    fig.add_vline(x=df[columns].mean(), line_dash='dash', line_color='white', annotation_text='Average', annotation_position='top left')
     # Changing the x-axis label
     fig.update_xaxes(title_text='Score')
     # Changing the y-axis label
