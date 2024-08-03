@@ -1,4 +1,10 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
+import scipy
+import plotly.express as px
+import plotly.figure_factory as ff
+from urllib.error import URLError
 
 st.set_page_config(page_title='2024 DCI Data', page_icon='🎵', layout='wide')
 
