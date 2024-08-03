@@ -13,7 +13,7 @@ def intro():
         
         Select a page from the dropdown menu on the sidebar to the left to explore the data.
         
-        ## NOTE: This app is best viewed using Dark Mode and Wide Mode.
+        ### NOTE: This app is best viewed using Dark Mode and Wide Mode.
         
         *Data courtesy of [dci.org](https://www.dci.org)*
         
