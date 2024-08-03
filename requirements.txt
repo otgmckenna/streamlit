@@ -2,4 +2,4 @@ numpy
 pandas
 matplotlib
 warnings
-plotly==5.22.0
+plotly
