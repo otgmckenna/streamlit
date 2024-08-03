@@ -3,5 +3,4 @@ pandas
 matplotlib
 plotly
 pandas
-streamlit_extras
 warnings
