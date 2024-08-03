@@ -3,4 +3,3 @@ numpy
 pandas
 plotly
 urllib3
-scipy
