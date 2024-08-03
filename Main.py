@@ -40,8 +40,6 @@ def data_exploration():
     )
     import streamlit as st
     import plotly.express as px
-    import warnings
-    warnings.simplefilter(action='ignore', category=FutureWarning)
     from urllib.error import URLError
     
     df = pd.read_csv('scores.csv')
@@ -136,8 +134,6 @@ def corps_comparison():
     import pandas as pd
     import streamlit as st
     import plotly.express as px
-    import warnings
-    warnings.simplefilter(action='ignore', category=FutureWarning)
     from urllib.error import URLError
     
     df = pd.read_csv('scores.csv')
@@ -181,8 +177,6 @@ def score_dist():
     import streamlit as st
     import plotly.express as px
     import plotly.figure_factory as ff
-    import warnings
-    warnings.simplefilter(action='ignore', category=FutureWarning)
     from urllib.error import URLError
     
     df = pd.read_csv('scores.csv')
@@ -232,8 +226,6 @@ def overall_scores():
     import pandas as pd
     import streamlit as st
     import plotly.express as px
-    import warnings
-    warnings.simplefilter(action='ignore', category=FutureWarning)
     from urllib.error import URLError
     
     df = pd.read_csv('scores.csv')
