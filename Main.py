@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.set_page_config(page_title='2024 DCI Data', page_icon='🎵')
+st.set_page_config(page_title='2024 DCI Data', page_icon='🎵', layout='wide')
 
 def intro():
     import streamlit as st
