@@ -177,12 +177,9 @@ def corps_comparison():
 
 def score_dist():
     import pandas as pd
-    import streamlit as st
     import numpy as np
     import scipy
-    import plotly.express as px
     import plotly.figure_factory as ff
-    from urllib.error import URLError
     
     df = pd.read_csv('scores.csv')
     
