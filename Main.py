@@ -50,7 +50,7 @@ def data_exploration():
     # Converting the Date column to datetime
     df['Date'] = pd.to_datetime(df['Date'])
     
-    st.markdown(f'# {list(page_names_to_funcs.keys())[2]}')
+    st.markdown(f'# {list(page_names_to_funcs.keys())[3]}')
     # Adding a UI to the dataframe that will allow the user to filter the data
     # Original code from: https://blog.streamlit.io/auto-generate-a-dataframe-filtering-ui-in-streamlit-with-filter_dataframe/
     def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
@@ -150,7 +150,7 @@ def corps_comparison():
     # Renaming the columns to make them more readable
     df.columns = ['Location', 'Date', 'Corps', 'Total', 'General Effect', 'Visual Proficiency', 'Visual Analysis', 'Color Guard', 'Visual Total', 'Brass', 'Music Analysis', 'Percussion', 'Music Total']
     
-    st.markdown(f'# {list(page_names_to_funcs.keys())[3]}')
+    st.markdown(f'# {list(page_names_to_funcs.keys())[4]}')
     
     st.write('### Compare the scores of different corps')
     st.write('Select the corps and the score/caption to compare.')
@@ -193,9 +193,9 @@ def score_dist():
     # Renaming the columns to make them more readable
     df.columns = ['Location', 'Date', 'Corps', 'Class', 'Total', 'General Effect', 'Visual Proficiency', 'Visual Analysis', 'Color Guard', 'Visual Total', 'Brass', 'Music Analysis', 'Percussion', 'Music Total']
     
-    st.markdown(f'# {list(page_names_to_funcs.keys())[4]}')
+    st.markdown(f'# {list(page_names_to_funcs.keys())[5]}')
     
-    st.write('### Distribution of scores')
+    st.write('### Score Distribution')
     st.write('Select the score or caption to view the distribution.')
     
     # Letting user choose only one numerical column to compare
@@ -211,8 +211,15 @@ def score_dist():
     
     # Creating a histogram of the chosen score/caption using Plotly Figure Factory, showing each class in a different color
     fig = ff.create_distplot([df[columns][df['Class'] == c].dropna() for c in df['Class'].unique()], df['Class'].unique(), colors=['#c8363d', '#1761af', '#6aa338'], bin_size=1)
+    # Coloring the histogram based on class
+    if class_filter == 'World':
+        fig.update_traces(marker_color='#c8363d', selector={'name': 'World'})
+    elif class_filter == 'Open':
+        fig.update_traces(marker_color='#1761af', selector={'name': 'Open'})
+    elif class_filter == 'All-Age':
+        fig.update_traces(marker_color='#6aa338', selector={'name': 'All-Age'})
     # Adjusting the hover text
-    fig.update_traces(hovertemplate='Score: %{x}<br>Density: %{y}')
+    fig.update_traces(hovertemplate='Score Range: %{x}')
     # Adding a vertical line to indicate the mean score and showing the mean value
     fig.add_vline(x=df[columns].mean(), line_dash='dash', line_color='white', annotation_text='Average', annotation_position='top left')
     # Changing the x-axis label
@@ -242,7 +249,7 @@ def overall_scores():
     # Renaming the columns to make them more readable
     df.columns = ['Location', 'Date', 'Corps', 'Class', 'Total', 'General Effect', 'Visual Proficiency', 'Visual Analysis', 'Color Guard', 'Visual Total', 'Brass', 'Music Analysis', 'Percussion', 'Music Total']
     
-    st.markdown(f'# {list(page_names_to_funcs.keys())[1]}')
+    st.markdown(f'# {list(page_names_to_funcs.keys())[2]}')
     
     st.write('### Overall Rankings')
     st.write('View the overall rankings of the corps, based on each corps\' most recent score.')
@@ -261,8 +268,6 @@ def overall_scores():
     
     # Creating a horizontal bar plot of the most recent scores
     fig = px.bar(most_recent_scores, x='Total', y='Corps', orientation='h', title='Overall Rankings', width=1600, height=1000)
-    # Adding score to the bars
-    fig.update_traces(text=most_recent_scores['Total'], textposition='inside')
     # Adding a vertical line to indicate the mean score
     fig.add_vline(x=most_recent_scores['Total'].mean(), line_dash='dash', line_color='white', annotation_text='Average', annotation_position='bottom left')
     # Coloring the bars based on class
@@ -275,12 +280,65 @@ def overall_scores():
     fig.update_yaxes(title_text='Corps')
     st.plotly_chart(fig)
 
+def top_12():
+    import pandas as pd
+    import streamlit as st
+    import plotly.express as px
+    from urllib.error import URLError
+    
+    df = pd.read_csv('scores.csv')
+    
+    # Dropping the CTot column as it is not needed
+    df.drop(columns='CTot', inplace=True)
+    
+    # Converting the Date column to datetime
+    df['Date'] = pd.to_datetime(df['Date'])
+
+    # Filtering the data to only include certain scores: GETot, VP_Tot, VA_Tot, CG_Tot, Vis_Tot, MB_Tot, MA_Tot, MP_Tot, Mus_Tot
+    df = df[['Location', 'Date', 'Corps', 'Class', 'Total', 'GE_Tot', 'VP_Tot', 'VA_Tot', 'CG_Tot', 'Vis_Tot', 'MB_Tot', 'MA_Tot', 'MP_Tot', 'Mus_Tot']]
+    
+    # Renaming the columns to make them more readable
+    df.columns = ['Location', 'Date', 'Corps', 'Class', 'Total', 'General Effect', 'Visual Proficiency', 'Visual Analysis', 'Color Guard', 'Visual Total', 'Brass', 'Music Analysis', 'Percussion', 'Music Total']
+    
+    # Getting the most recent scores for each corps
+    most_recent_scores = df.loc[df.groupby('Corps')['Date'].idxmax()]
+    
+    # Sorting the data by the Total column
+    most_recent_scores = most_recent_scores.sort_values('Total', ascending=False)
+    
+    # Getting only World class corps
+    most_recent_scores = most_recent_scores[most_recent_scores['Class'] == 'World']
+    
+    # Getting the top 12 corps
+    top_12 = most_recent_scores.head(12)
+    
+    st.markdown(f'# {list(page_names_to_funcs.keys())[1]}')
+    
+    st.write('### Top 12 Corps')
+    st.write('View the most recent scores of the top 12 corps.')
+    
+    # Creating a horizontal bar plot of the top 12 corps
+    fig = px.bar(top_12, x='Total', y='Corps', orientation='h', title='Top 12 Corps', width=1600, height=800)
+    # Adding a vertical line to indicate the mean score
+    fig.add_vline(x=top_12['Total'].mean(), line_dash='dash', line_color='white', annotation_text='Average', annotation_position='bottom left')
+    # Coloring the bars based on class
+    fig.update_traces(marker_color=top_12['Class'].map({'World': '#c8363d', 'Open': '#1761af', 'All-Age': '#6aa338'}))
+    # Cleaning up the hover text
+    fig.update_traces(hovertemplate='%{y}<br>Score: %{x}<br>')
+    # Changing the x-axis label
+    fig.update_xaxes(title_text='Score')
+    # Changing the y-axis label
+    fig.update_yaxes(title_text='Corps')
+    st.plotly_chart(fig)
+    
+
 page_names_to_funcs = {
     'Home': intro,
+    'Top 12 Corps - WIP': top_12,
     'Overall Rankings': overall_scores,
     'Data Exploration': data_exploration,
     'Corps Comparison': corps_comparison,
-    'Score Distribution': score_dist
+    'Score Distribution': score_dist,
 }
 
 page_name = st.sidebar.selectbox('Select a page', list(page_names_to_funcs.keys()))
