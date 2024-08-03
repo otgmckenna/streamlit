@@ -9,11 +9,12 @@ def intro():
         """
         ## 2024 Drum Corps International Data
         
+        ### NOTE: This app is best viewed using Dark Mode and Wide Mode.
+        
         This app contains data from the 2024 Drum Corps International season.
         
         Select a page from the dropdown menu on the sidebar to the left to explore the data.
-        
-        ### NOTE: This app is best viewed using Dark Mode and Wide Mode.
+
         
         *Data courtesy of [dci.org](https://www.dci.org)*
         
