@@ -1,4 +1,5 @@
 import streamlit as st
+import scipy
 
 st.set_page_config(page_title='2024 DCI Data', page_icon='🎵', layout='wide')
 
