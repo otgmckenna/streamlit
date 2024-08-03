@@ -1,5 +1,4 @@
 import streamlit as st
-import scipy
 
 st.set_page_config(page_title='2024 DCI Data', page_icon='🎵', layout='wide')
 
@@ -179,6 +178,7 @@ def corps_comparison():
 def score_dist():
     import pandas as pd
     import streamlit as st
+    import scipy
     import plotly.express as px
     import plotly.figure_factory as ff
     from urllib.error import URLError
