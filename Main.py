@@ -309,7 +309,7 @@ def top_12():
     # Getting the most recent scores for each corps
     most_recent_scores = df.loc[df.groupby('Corps')['Date'].idxmax()]
     
-    # Sorting the data by the Total column
+    # Sorting the data by the Total column, with the highest scores at the top
     most_recent_scores = most_recent_scores.sort_values('Total', ascending=False)
     
     # Getting only World class corps
@@ -323,14 +323,14 @@ def top_12():
     st.write('### Top 12 Corps')
     st.write('View the most recent scores of the top 12 corps.')
     
-    # Creating a horizontal bar plot of the top 12 corps
-    fig = px.bar(top_12, x='Total', y='Corps', orientation='h', title='Top 12 Corps', width=1600, height=800)
+    # Creating a horizontal bar plot of the top 12 corps, with the biggest scores at the top
+    fig = px.bar(top_12, x='Total', y='Corps', orientation='h', title='Top 12 Corps', width=1600, height=1000)
     # Adding a vertical line to indicate the mean score
     fig.add_vline(x=top_12['Total'].mean(), line_dash='dash', line_color='white', annotation_text='Average', annotation_position='bottom left')
     # Coloring the bars based on class
     fig.update_traces(marker_color=top_12['Class'].map({'World': '#c8363d', 'Open': '#1761af', 'All-Age': '#6aa338'}))
     # Cleaning up the hover text
-    fig.update_traces(hovertemplate='%{y}<br>Score: %{x}<br>')
+    fig.update_traces(hovertemplate='Corps: %{y}<br>Score: %{x}<br>')
     # Changing the x-axis label
     fig.update_xaxes(title_text='Score')
     # Changing the y-axis label
